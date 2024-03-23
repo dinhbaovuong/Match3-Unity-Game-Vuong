@@ -1,8 +1,14 @@
 ﻿public class Constants 
 {
     public const string GAME_SETTINGS_PATH = "gamesettings";
+    
+    public const string ITEM_SET_PATH = "ItemSet";
+
+    public const string BONUS_ITEM_SET_PATH = "BonusItemSet";
 
     public const string PREFAB_CELL_BACKGROUND = "prefabs/cellBackground";
+    
+    public const string PREFAB_NORMAL_EMPTY = "prefabs/empty";
 
     public const string PREFAB_NORMAL_TYPE_ONE = "prefabs/itemNormal01";
 

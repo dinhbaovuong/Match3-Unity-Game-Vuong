@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NormalItem : Item
 {
@@ -20,6 +18,12 @@ public class NormalItem : Item
     public void SetType(eNormalType type)
     {
         ItemType = type;
+    }
+
+    protected override Sprite GetItemSprite()
+    {
+        ItemSet itemSet = Resources.Load<ItemSet>(Constants.ITEM_SET_PATH);
+        return itemSet.Items[(int)ItemType];
     }
 
     protected override string GetPrefabName()

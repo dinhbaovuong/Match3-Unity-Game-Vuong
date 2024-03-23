@@ -15,20 +15,34 @@ public class Item
 
     public virtual void SetView()
     {
-        string prefabname = GetPrefabName();
+        GameObject emptyItemPrefab = GetEmptyItemObject();
+        Sprite itemSprite = GetItemSprite();
 
-        if (!string.IsNullOrEmpty(prefabname))
+        if (itemSprite != null && emptyItemPrefab != null)
         {
-            GameObject prefab = Resources.Load<GameObject>(prefabname);
-            if (prefab)
-            {
-                View = ObjectPoolManager.SpawnObject(prefab, Vector3.zero, Quaternion.identity).transform;
-                //View = GameObject.Instantiate(prefab).transform;
-            }
+            View = ObjectPoolManager.SpawnObject(emptyItemPrefab, Vector3.zero, Quaternion.identity).transform;
+            View.GetComponent<SpriteRenderer>().sprite = itemSprite;
         }
+
+        // if (!string.IsNullOrEmpty(prefabname))
+        // {
+        //     GameObject prefab = Resources.Load<GameObject>(prefabname);
+        //     if (prefab)
+        //     {
+        //         View = ObjectPoolManager.SpawnObject(prefab, Vector3.zero, Quaternion.identity).transform;
+        //         //View = GameObject.Instantiate(prefab).transform;
+        //     }
+        // }
     }
 
     protected virtual string GetPrefabName() { return string.Empty; }
+
+    protected virtual Sprite GetItemSprite() { return null;}
+    
+    protected virtual GameObject GetEmptyItemObject()
+    {
+        return Resources.Load<GameObject>(Constants.PREFAB_NORMAL_EMPTY);
+    }
 
     public virtual void SetCell(Cell cell)
     {
@@ -80,7 +94,6 @@ public class Item
         {
             sp.sortingOrder = 0;
         }
-
     }
 
     internal void ShowAppearAnimation()
@@ -105,6 +118,7 @@ public class Item
                 () =>
                 {
                     ObjectPoolManager.ReturnObjectToPool(View.gameObject);
+                    //GameObject.Destroy(View.gameObject);
                     View = null;
                 }
                 );
@@ -135,6 +149,7 @@ public class Item
 
         if (View)
         {
+            //GameObject.Destroy(View.gameObject);
             ObjectPoolManager.ReturnObjectToPool(View.gameObject);
             View = null;
         }

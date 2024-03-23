@@ -19,6 +19,12 @@ public class BonusItem : Item
     {
         ItemType = type;
     }
+    
+    protected override Sprite GetItemSprite()
+    {
+        ItemSet itemSet = Resources.Load<ItemSet>(Constants.BONUS_ITEM_SET_PATH);
+        return itemSet.Items[(int)ItemType - 1];
+    }
 
     protected override string GetPrefabName()
     {
