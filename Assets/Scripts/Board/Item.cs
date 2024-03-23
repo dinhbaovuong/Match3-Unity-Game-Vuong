@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controllers;
 using UnityEngine;
 using DG.Tweening;
 
@@ -21,7 +22,8 @@ public class Item
             GameObject prefab = Resources.Load<GameObject>(prefabname);
             if (prefab)
             {
-                View = GameObject.Instantiate(prefab).transform;
+                View = ObjectPoolManager.SpawnObject(prefab, Vector3.zero, Quaternion.identity).transform;
+                //View = GameObject.Instantiate(prefab).transform;
             }
         }
     }
@@ -45,6 +47,7 @@ public class Item
         if (View)
         {
             View.position = pos;
+            View.localScale = Vector3.one;
         }
     }
 
@@ -101,7 +104,7 @@ public class Item
             View.DOScale(0.1f, 0.1f).OnComplete(
                 () =>
                 {
-                    GameObject.Destroy(View.gameObject);
+                    ObjectPoolManager.ReturnObjectToPool(View.gameObject);
                     View = null;
                 }
                 );
@@ -132,7 +135,7 @@ public class Item
 
         if (View)
         {
-            GameObject.Destroy(View.gameObject);
+            ObjectPoolManager.ReturnObjectToPool(View.gameObject);
             View = null;
         }
     }
