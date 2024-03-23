@@ -147,7 +147,7 @@ public class Board
 
                 NormalItem item = new NormalItem();
 
-                item.SetType(Utils.GetRandomNormalType());
+                item.SetType(GetUniqueType(cell));
                 item.SetView();
                 item.SetViewRoot(m_root);
 
@@ -155,6 +155,68 @@ public class Board
                 cell.ApplyItemPosition(true);
             }
         }
+    }
+
+    internal NormalItem.eNormalType GetUniqueType(Cell cell)
+    {
+        List<NormalItem.eNormalType> allTypeList = Enum.GetValues(typeof(NormalItem.eNormalType))
+            .Cast<NormalItem.eNormalType>().ToList();
+        List<NormalItem.eNormalType> neighbors = new List<NormalItem.eNormalType>();
+        foreach (var type in allTypeList)
+        {
+            if (cell.NeighbourUp != null && !cell.NeighbourUp.IsEmpty && cell.Item is NormalItem itemUp)
+            {
+                neighbors.Add(itemUp.ItemType);
+            }
+            
+            if (cell.NeighbourBottom != null && !cell.NeighbourBottom.IsEmpty && cell.Item is NormalItem itemBot)
+            {
+                neighbors.Add(itemBot.ItemType);
+            }
+            
+            if (cell.NeighbourRight != null && !cell.NeighbourRight.IsEmpty && cell.Item is NormalItem itemRight)
+            {
+                neighbors.Add(itemRight.ItemType);
+            }
+            
+            if (cell.NeighbourLeft != null && !cell.NeighbourLeft.IsEmpty && cell.Item is NormalItem itemLeft)
+            {
+                neighbors.Add(itemLeft.ItemType);
+            }
+        }
+
+        // Get a list of normal type that doesnt show up in all neighbor
+        List<NormalItem.eNormalType> uniqueTypes = allTypeList.Except(neighbors).ToList();
+
+        if (uniqueTypes.Count == 1)
+        {
+            Debug.Log(uniqueTypes[0]);
+            return uniqueTypes[0];
+        }
+            
+
+        Dictionary<NormalItem.eNormalType, int> frequencyMap = new Dictionary<NormalItem.eNormalType, int>();
+
+        foreach (var type in uniqueTypes)
+        {
+            frequencyMap[type] = 0;
+        }
+
+        foreach (var m_cell in m_cells)
+        {
+            if (m_cell.Item is NormalItem item)
+            {
+                if (frequencyMap.ContainsKey(item.ItemType))
+                {
+                    frequencyMap[item.ItemType]++;
+                }
+            }
+        }
+
+        NormalItem.eNormalType leastFrequentItem = frequencyMap.OrderBy(kvp => kvp.Value).First().Key;
+
+        Debug.Log(leastFrequentItem);
+        return leastFrequentItem;
     }
 
     internal void ExplodeAllItems()
