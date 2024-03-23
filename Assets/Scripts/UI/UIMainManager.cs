@@ -23,7 +23,7 @@ public class UIMainManager : MonoBehaviour
             m_menuList[i].Setup(this);
         }
     }
-
+    
     internal void ShowMainMenu()
     {
         m_gameManager.ClearLevel();
@@ -117,5 +117,19 @@ public class UIMainManager : MonoBehaviour
     internal void ShowGameMenu()
     {
         m_gameManager.SetState(GameManager.eStateGame.GAME_STARTED);
+    }
+
+    internal void ReplayCurrentLevel()
+    {
+        m_gameManager.ClearLevel();
+        
+        if (m_gameManager.CurrentLevelMode == GameManager.eLevelMode.MOVES)
+        {
+            m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES);
+        }
+        else
+        {
+            m_gameManager.LoadLevel(GameManager.eLevelMode.TIMER);
+        }
     }
 }

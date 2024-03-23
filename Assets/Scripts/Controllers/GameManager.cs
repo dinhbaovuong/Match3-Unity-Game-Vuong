@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public eLevelMode CurrentLevelMode { get; private set; }
+
 
     private GameSettings m_gameSettings;
 
@@ -86,6 +88,8 @@ public class GameManager : MonoBehaviour
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
         m_boardController.StartGame(this, m_gameSettings);
 
+        CurrentLevelMode = mode;
+
         if (mode == eLevelMode.MOVES)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelMoves>();
@@ -106,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(WaitBoardController());
     }
-
+    
     internal void ClearLevel()
     {
         if (m_boardController)
